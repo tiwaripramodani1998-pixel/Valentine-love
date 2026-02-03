@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>💝 Be My Valentine? 💝</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Lato:wght@300;400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --rose:    #e63946;
+    --deep:    #c1121f;
+    --blush:   #ffafcc;
+    --cream:   #fff0f3;
+    --gold:    #f4a261;
+    --text:    #5a1a2a;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--cream);
+    font-family: 'Lato', sans-serif;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── floating hearts layer ── */
+  .hearts-layer {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .heart {
+    position: absolute;
+    opacity: 0;
+    animation: floatUp linear infinite;
+  }
+  .heart svg { width: 100%; height: 100%; }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.55; }
+    90%  { opacity: 0.4; }
+    100% { transform: translateY(-110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── card ── */
+  .card {
+    position: relative;
+    z-index: 1;
+    width: 90%;
+    max-width: 480px;
+    background: #fff;
+    border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(198, 18, 46, 0.18);
+    padding: 48px 36px 52px;
+    text-align: center;
+    animation: cardIn 0.8s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes cardIn {
+    from { transform: scale(0.7) translateY(60px); opacity: 0; }
+    to   { transform: scale(1)   translateY(0);    opacity: 1; }
+  }
+
+  /* big heart icon */
+  .big-heart {
+    width: 90px; height: 90px;
+    margin: 0 auto 18px;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50%     { transform: scale(1.15); }
+  }
+
+  .question {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.7rem, 5vw, 2.3rem);
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .sub {
+    font-size: 0.95rem;
+    color: #a05a6a;
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+
+  /* ── buttons row ── */
+  .btn-row {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    position: relative;
+    min-height: 56px;
+  }
+
+  .btn {
+    position: relative;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 14px 38px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .btn-yes {
+    background: linear-gradient(135deg, var(--rose), var(--deep));
+    color: #fff;
+    box-shadow: 0 6px 24px rgba(230,57,70,0.4);
+  }
+  .btn-yes:hover { transform: scale(1.08); box-shadow: 0 8px 30px rgba(230,57,70,0.55); }
+
+  .btn-no {
+    background: #fff;
+    color: var(--rose);
+    border: 2px solid var(--blush);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transition: transform 0.15s ease-out, box-shadow 0.2s;
+  }
+  .btn-no:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.1); }
+
+  /* ── YES screen ── */
+  .yes-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeIn 0.5s ease both;
+  }
+  .yes-screen.show { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .yes-screen .emoji-burst {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    animation: emojiPop 0.6s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes emojiPop {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  .yes-screen h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--deep);
+    font-size: clamp(1.5rem, 4.5vw, 2rem);
+    margin-bottom: 14px;
+  }
+
+  .yes-screen .msg {
+    font-size: 1.05rem;
+    color: var(--text);
+    line-height: 1.9;
+    max-width: 380px;
+    font-weight: 300;
+    white-space: pre-line;
+    font-style: italic;
+    background: linear-gradient(135deg, #fff5f7, #ffe4ec);
+    border-radius: 20px;
+    padding: 22px 24px;
+    border: 1px solid #ffcdd5;
+  }
+
+  .confetti-piece {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    animation: confettiFall 2.2s ease-in forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(900deg); opacity: 0; }
+  }
+
+  /* sparkles on yes */
+  .sparkle {
+    position: absolute;
+    pointer-events: none;
+    font-size: 1.4rem;
+    animation: sparkleAnim 1s ease-out forwards;
+  }
+  @keyframes sparkleAnim {
+    0%   { transform: scale(0) translate(0,0); opacity: 1; }
+    100% { transform: scale(1.5) translate(var(--tx), var(--ty)); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- floating hearts -->
+<div class="hearts-layer" id="heartsLayer"></div>
+
+<!-- card -->
+<div class="card" id="card">
+
+  <!-- initial ask -->
+  <div id="askScreen">
+    <div class="big-heart">
+      <svg viewBox="0 0 24 24" fill="var(--rose)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+
+    <p class="question">Will you be my Valentine? 💝</p>
+    <p class="sub">Think carefully before you answer… 😏</p>
+
+    <div class="btn-row">
+      <button class="btn btn-yes" id="btnYes">Yes ✨</button>
+      <button class="btn btn-no"  id="btnNo" >No</button>
+    </div>
+  </div>
+
+  <!-- yes celebration -->
+  <div class="yes-screen" id="yesScreen">
+    <div class="emoji-burst">💕🥰💕</div>
+    <h2>Yayy! Thank you Sonu! 🎉</h2>
+    <p class="msg" id="yesMsg"></p>
+  </div>
+</div>
+
+<script>
+// ── 1. Floating hearts ──
+(function spawnHearts(){
+  const layer = document.getElementById('heartsLayer');
+  const heartSVG = <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>;
+  const colors = ['#e63946','#ff6b81','#ffafcc','#f4a261','#c1121f'];
+  for(let i=0;i<18;i++){
+    const h = document.createElement('div');
+    h.className = 'heart';
+    const size = 18 + Math.random()*38;
+    h.style.cssText = `
+      left:${Math.random()*100}%;
+      bottom:-${size}px;
+      width:${size}px;
+      height:${size}px;
+      color:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${4+Math.random()*6}s;
+      animation-delay:${Math.random()*5}s;
+    `;
+    h.innerHTML = heartSVG;
+    layer.appendChild(h);
+  }
+})();
+
+// ── 2. No button dodge ──
+const btnNo = document.getElementById('btnNo');
+function dodge(e){
+  const rect = btnNo.getBoundingClientRect();
+  const cx   = rect.left + rect.width/2;
+  const cy   = rect.top  + rect.height/2;
+  const dx   = e.clientX - cx;
+  const dy   = e.clientY - cy;
+  // pick a perpendicular‑ish random direction
+  const angle = Math.atan2(dy, dx) + (Math.random() > .5 ? Math.PI*.55 : -Math.PI*.55);
+  const dist  = 80 + Math.random()*60;
+  let nx = rect.left + Math.cos(angle)*dist;
+  let ny = rect.top  + Math.sin(angle)*dist;
+  // clamp inside viewport
+  nx = Math.max(0, Math.min(window.innerWidth  - rect.width,  nx));
+  ny = Math.max(0, Math.min(window.innerHeight - rect.height, ny));
+  btnNo.style.position = 'fixed';
+  btnNo.style.left     = nx + 'px';
+  btnNo.style.top      = ny + 'px';
+  btnNo.style.margin   = '0';
+}
+btnNo.addEventListener('mousemove', dodge);   // desktop
+btnNo.addEventListener('touchstart', function(e){
+  e.preventDefault();
+  dodge(e.touches[0]);
+}, {passive:false});                           // mobile
+
+// ── 3. Yes click ──
+const messages = [
+  The NO button never stood a chance 😊\n\nbecause my heart already had its answer.\n\nThank you for being my constant support,\nmy calm in chaos,\nand my biggest strength.\n\nGrateful for you.\nForever yours.\n\nI love you Sonu 😘\n\nHappy Valentine's Day ❤️
+];
+document.getElementById('btnYes').addEventListener('click', function(){
+  document.getElementById('askScreen').style.display   = 'none';
+  const ys = document.getElementById('yesScreen');
+  ys.classList.add('show');
+  document.getElementById('yesMsg').textContent = messages[Math.floor(Math.random()*messages.length)];
+  launchConfetti();
+});
+
+// ── 4. Confetti ──
+function launchConfetti(){
+  const colors = ['#e63946','#ff6b81','#ffafcc','#f4a261','#fff','#c1121f','#ffd166'];
+  for(let i=0;i<70;i++){
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.top  = '-10px';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDelay = Math.random()*0.6 + 's';
+    c.style.width  = (6+Math.random()*10) + 'px';
+    c.style.height = (6+Math.random()*10) + 'px';
+    document.body.appendChild(c);
+    setTimeout(()=> c.remove(), 3000);
+  }
+}
+</script>
+</body>
+</html>
